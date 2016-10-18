@@ -1,5 +1,6 @@
 
 
+
 // accepts contentState and returns the special
 // inlineStyles object for further proccessing
 export function persistStyles(contentState) {
@@ -34,9 +35,5 @@ export function reApplyPersistedStyles(contentState, persistedStyles) {
 // gets contentState and special persistedEntities object and
 // apply it to the contentState and returns updated contentState
 export function reApplyPersistedEntities(contentState, persistedEntities) {
-
-}
-
-export defualt function transliterate() {
 
 }
