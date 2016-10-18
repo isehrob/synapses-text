@@ -1,0 +1,60 @@
+{
+  "name": "synapses-text",
+  "version": "1.0.0",
+  "description": "Welcome to synapses text project!",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
+  "author": "Sehrob Ibrohimov",
+  "license": "ISC",
+  "jest": {
+    "rootDir": ".",
+    "scriptPreprocessor": "./node_modules/babel-jest"
+  },
+  "babel": {
+    "presets": ["es2015", "react"]
+  },
+  "devDependencies": {
+    "babel-core": "^6.3.26",
+    "babel-jest": "^16.0.0",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-react-transform": "^2.0.0",
+    "babel-plugin-syntax-class-properties": "^6.3.13",
+    "babel-plugin-syntax-decorators": "^6.3.13",
+    "babel-plugin-syntax-object-rest-spread": "^6.3.13",
+    "babel-plugin-transform-class-properties": "^6.3.13",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.3.13",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-2": "^6.13.0",
+    "clean-webpack-plugin": "^0.1.6",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-webpack-plugin": "^2.22.0",
+    "html-webpack-template": "^2.5.1",
+    "jest": "^16.0.1",
+    "jest-cli": "^16.0.1",
+    "obfuscator": "^0.5.4",
+    "react-transform-hmr": "^1.0.1",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.1",
+    "webpack-merge": "^0.5.1"
+  },
+  "dependencies": {
+    "draft-js": "^0.8.1",
+    "draft-js-export-html": "^0.4.0",
+    "draft-js-export-markdown": "^0.2.0",
+    "immutable": "^3.8.1",
+    "lodash": "^4.6.1",
+    "object-assign": "^4.0.1",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-infinite": "^0.9.2"
+  }
+}

@@ -1,0 +1,157 @@
+/* taken from: https://github.com/facebook/draft-js/blob/master/examples/rich/RichEditor.css*/
+
+.RichEditor-root {
+  background: #fff;
+  border: 1px solid #ddd;
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  padding: 15px;
+}
+
+.RichEditor-editor {
+  border-top: 1px solid #ddd;
+  cursor: text;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.RichEditor-editor .public-DraftEditorPlaceholder-root,
+.RichEditor-editor .public-DraftEditor-content {
+  margin: 0 -15px -15px;
+  padding: 15px;
+}
+
+.RichEditor-editor .public-DraftEditor-content {
+  min-height: 100px;
+}
+
+.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+  display: none;
+}
+
+.RichEditor-editor .RichEditor-blockquote {
+  border-left: 5px solid #eee;
+  color: #666;
+  font-family: 'Hoefler Text', 'Georgia', serif;
+  font-style: italic;
+  margin: 16px 0;
+  padding: 10px 20px;
+}
+
+.RichEditor-editor .public-DraftStyleDefault-pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+  font-size: 16px;
+  padding: 20px;
+}
+
+.RichEditor-controls {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 14px;
+  margin-bottom: 5px;
+  user-select: none;
+}
+
+.RichEditor-styleButton {
+  color: #807b7b;
+  cursor: pointer;
+  margin-right: 7px;
+  padding: 2px 0;
+  display: inline-block;
+  position: relative;
+}
+
+.RichEditor-activeButton {
+  color: #5890ff;
+}
+
+/* added by me: @sehrob */
+
+a.RichEditor-link{
+  text-decoration: underline;
+  color: blue;
+}
+.RichEditor-editor{
+  min-height: 300px;
+}
+.RichEditor-fromatting-button-block{
+    display: inline-block;
+    margin-right: 15px;
+}
+
+/* editor panel affix */
+.RichEditor-root .affix {
+    z-index: 2;
+    background-color: white;
+    top: 50px;
+    padding: 15px;
+    width: 60%;
+    border-bottom: 1px solid #ccc;
+}
+.RichEditor-code-block{
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;   
+}
+
+.inline-toolbar {
+  position: absolute;
+  z-index: 50;
+  background-color: white;
+  padding-top: 5px;
+  padding-left: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.inline-toolbar::after{
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 17%;
+    border-width: 7px;
+    border-style: solid;
+    border-color: #ccc transparent transparent transparent;
+}
+
+
+/* style buttons tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+/*.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+ 
+    position: absolute;
+    z-index: 1;
+}*/
+
+/* Show the tooltip text when you mouse over the tooltip container */
+/*.tooltip:hover .tooltiptext {
+    visibility: visible;
+}*/
+
+.tooltiptext {
+    position: absolute;
+    z-index: 50;
+    background: white;
+    color: black;
+    padding: 4px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    border-radius: 2px;
+    bottom: 25px;
+    left: 9px;
+/*    width: 110px;*/
+    text-align: center;
+}
