@@ -1,9 +1,18 @@
-// custom block renderering
+// custom-block-compoenents
+
 
 import React from 'react';
-import { Map } from 'immutable';
 import Draft from 'draft-js';
-import { Media, CustomCodeBlock } from './custom-blocks';
+import { Map } from 'immutable';
+
+
+export const CustomCodeBlock = (props) => {
+    return (
+        <code style={{display: "block", padding: "20px"}}>
+            {props.children}
+        </code>
+    );
+}
 
 
 export function CustomBlockRenderer(block) {
@@ -13,7 +22,7 @@ export function CustomBlockRenderer(block) {
             component: Media,
             editable: false,
         };
-    } 
+    }
 
     return null;
 }
@@ -35,4 +44,5 @@ const blockRenderMap = Map({
     }
 });
 
-export const customBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(blockRenderMap);
+export const customBlockRenderMap = Draft
+    .DefaultDraftBlockRenderMap.merge(blockRenderMap);

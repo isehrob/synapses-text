@@ -1,13 +1,7 @@
-// strategies
 import { Map } from 'immutable';
 import {
-    AtomicBlockUtils,
     convertToRaw,
-    Editor,
     EditorState,
-    RichUtils,
-    DefaultDraftBlockRenderMap,
-    CompositeDecorator,
     ContentState,
     Entity,
     Modifier,
@@ -15,30 +9,24 @@ import {
 } from 'draft-js';
 
 
-/**
-* Transliteration
-*
-* Really big function
-*
-*/
+// NOTE! in draft ranges start from 1 not 0!
+// TODO (sehrob): find out when to return which one
 
-// TODO (sehrob): fix this BUGGY function: use synapses
-// editor to find out why and how this is BUGGY
-export function getPosition(offset, blockText, start) {
+// given contentBlock's text content and sytle offset it tries
+// to figure out boundaries of the word(s) that's being styled
+export function getWordBoundary(offset, blockText, start = false) {
 
     // NOTE! in draft ranges start from 1 not 0!
     // that's why I am doing this: offset - 1
     offset -= 1;
     // if we at the start of the text just return offset
     if (offset === 0) return offset;
-    //  here text is a block text comes down from far above
-    //  TODO (sehrob): can we use dependency injection somehow?
-    var character = blockText.charAt(offset);
 
     //  if it is a start position and
     //  if character at offset is a space
     //  then return offset + 1 otherwise
     //  find the start and return
+    var character = blockText.charAt(offset);
     if(start) {
         if(character && character == " "){
             return ++offset;

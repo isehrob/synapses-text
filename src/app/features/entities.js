@@ -1,5 +1,3 @@
-// custom-block-compoenents
-
 
 import React from 'react';
 import { Entity } from 'draft-js'
@@ -13,6 +11,21 @@ export const Link = (props) => {
         </a>
     );
 };
+
+// link decoration
+export function findLinkEntities(contentBlock, callback) {
+    contentBlock.findEntityRanges(
+        (character) => {
+            const entityKey = character.getEntity();
+            return (
+                entityKey !== null &&
+                Entity.get(entityKey).getType() === 'LINK'
+               );
+            }, callback
+    );
+}
+
+
 
 const Image = (props) => {
     return <img src={props.src} />;
@@ -34,13 +47,4 @@ export const Media = (props) => {
     else if (type === 'video') media = <Video src={src} />;
 
     return media;
-}
-
-
-export const CustomCodeBlock = (props) => {
-    return (
-        <code style={{display: "block", padding: "20px"}}>
-            {props.children}
-        </code>
-    );
 }

@@ -37,3 +37,12 @@ export function reApplyPersistedStyles(contentState, persistedStyles) {
 export function reApplyPersistedEntities(contentState, persistedEntities) {
 
 }
+
+// main function which proccess block text with rich formatting persistance
+export defautl processWithPersistance(
+    contentState,
+    proccessFunction,
+    selection = false
+) {
+    
+}

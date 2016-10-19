@@ -1,13 +1,15 @@
 // main-toolbar
 
 import React from 'react';
-import { RichUtils,
-		Entity,
-		AtomicBlockUtils } from 'draft-js';
+import {
+	RichUtils,
+	Entity,
+	AtomicBlockUtils
+} from 'draft-js';
 import {
 	InlineStyleControls,
 	BlockStyleControls
-} from '../features/style-controls';
+} from './controls';
 import { SpecialButton } from './buttons';
 
 

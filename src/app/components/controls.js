@@ -1,8 +1,8 @@
 // block styles
 
 import React from 'react';
-import { StyleButton } from '../components/buttons';
-import { BLOCK_TYPES, HEADER_TYPES, INLINE_STYLES } from '../utils/meta';
+import { StyleButton } from './buttons';
+import { BLOCK_TYPES, HEADER_TYPES, INLINE_STYLES } from '../utils/types';
 
 
 

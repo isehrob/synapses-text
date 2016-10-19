@@ -1,5 +1,0 @@
-
-
-export defualt function transliterate() {
-
-}

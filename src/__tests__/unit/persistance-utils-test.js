@@ -11,7 +11,7 @@ import {
     SelectionState
 } from 'draft-js';
 
-const featureFunctions = require('../../app/features/functions');
+const featureFunctions = require('../../app/features/persistance-utils');
 const oneLinetext = 'Нет подключения к Интернету';
 
 // these are `draft` inline style ranges objects

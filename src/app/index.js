@@ -23,18 +23,18 @@ import {stateToHTML} from 'draft-js-export-html';
 
 
 import AffixWrapper from './components/affix';
-import { Link } from './features/custom-blocks';
+import { Link } from './features/entities';
 import {
     InlineStyleControls,
     BlockStyleControls
-} from './features/style-controls';
+} from './components/controls';
 import {
     CustomBlockRenderer,
     getBlockStyle,
     customBlockRenderMap
-} from './features/custom-block-render';
-import { findLinkEntities } from './features/strategies';
-import { transliterate } from './features/functions';
+} from './features/custom-blocks';
+import { findLinkEntities } from './features/entities';
+import { transliterate } from './features/block-text-proccess-functions';
 import { EditorStyleMap } from './utils/styles';
 
 import Toolbar from './components/toolbar';
