@@ -33,8 +33,10 @@ import {
     getBlockStyle,
     customBlockRenderMap
 } from './features/custom-blocks';
+
 import { findLinkEntities } from './features/entities';
 import { transliterate } from './features/block-text-proccess-functions';
+import withPersistance from './features/persistance';
 import { EditorStyleMap } from './utils/styles';
 
 import Toolbar from './components/toolbar';
@@ -152,7 +154,10 @@ class SynapsesTextEditor extends React.Component {
         })
 
         this.transliterate = () => this.onChange(
-          transliterate(this.state.editorState)
+            withPersistance(
+                this.state.editorState,
+                transliterate
+            )
         );
 
     }

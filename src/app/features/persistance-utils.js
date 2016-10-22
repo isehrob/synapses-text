@@ -1,10 +1,6 @@
-import { Map } from 'immutable';
+
 import {
     convertToRaw,
-    EditorState,
-    ContentState,
-    Entity,
-    Modifier,
     SelectionState
 } from 'draft-js';
 
@@ -14,7 +10,7 @@ import {
 
 // given contentBlock's text content and sytle offset it tries
 // to figure out boundaries of the word(s) that's being styled
-export function getWordBoundary(offset, blockText, start = false) {
+export function getWordBoundaryFromChrOffset(offset, blockText, start = false) {
 
     // NOTE! in draft ranges start from 1 not 0!
     // that's why I am doing this: offset - 1
@@ -67,16 +63,23 @@ export function getWordBoundary(offset, blockText, start = false) {
     // just return offset untouched
     return offset;
 
-    }
+}
 
-// getting part of the text
-// getStyledSegment
-export function getStyledSegment(range, blockText) {
+// helper function for calculating end offset of the styled range
+export function getRangeEnd(range) {
+    return (range.offset !== 1) ? range.length + range.offset :  range.length;
+}
+
+// gets range object and text content of the contentBlock
+// objects and returns a special intermediary object which
+// is used to figure out the ranges of modified text to be
+// styled again
+export function convertRangeFromChrToWdLevel(range, blockText) {
 
     const rangeEnd = getRangeEnd(range);
     var segment = blockText.substring(
-        getPosition(range.offset, blockText, true),
-        getPosition(rangeEnd, blockText)
+        getWordBoundaryFromChrOffset(range.offset, blockText, true),
+        getWordBoundaryFromChrOffset(rangeEnd, blockText)
     );
 
     // don't know how but segment my have spaces
@@ -88,60 +91,34 @@ export function getStyledSegment(range, blockText) {
     // decorated
     segment = segment.split(" ");
 
+    // sometimes if there is a word repeated in the text then
+    // indexOf returns the first ones index but style one obiously
+    // may not be the first one so I'm doing this trick here but
+    // this is a temporary solution to the problem
+    let start = blockText.split(" ").indexOf(segment[0]);
+    // let stop = false;
+    // while(!stop || start > blockText.length) {
+    //     if ((range.offset - start) > segment[0].length) {
+    //         start = blockText.split(" ").slice(start).indexOf(segment[0]);
+    //     }else{
+    //         stop = true;
+    //     }
+    // }
+
+    // special object that represents style info at word level
+    // used at reapplying the style back to the text
     return {
-        start: blockText.split(" ").indexOf(segment[0]),
+        start: start,
         length: segment.length,
         style: range.style
     };
 
 }
 
-export function getBlockText (selection = false, block) {
-    if(selection) {
-        return block.getText().slice(
-            selection.getStartOffset(),
-            selection.getEndOffset())
-    }
-    return block.getText();
-}
 
-export function transliterateText(text) {
-    return text.toUpperCase();
-}
-
-export function createBlockSelection(
-    block,
-    startOffset = false,
-    endOffset = false
-) {
-    let blockSelection = SelectionState.createEmpty(block.getKey());
-    let selectionObject = {};
-    if (startOffset) selectionObject.anchorOffset = startOffset;
-    selectionObject.focusOffset = (endOffset) ? endOffset : block.getLength();
-    return blockSelection.merge(selectionObject);
-}
-
-export function getRawBlocksArray(contentState) {
-    return convertToRaw(contentState).blocks;
-}
-
-export function getNotRawBlock(contentState, key) {
-    return contentState.getBlockForKey(key);
-}
-
-export function blockIsProccessible(block) {
-    return !(block.getType() === 'atomic' || block.getText().trim() === "");
-}
-
-export function blockHasInlineStyles(block) {
-    return (block.inlineStyleRanges.length > 0);
-}
-
-export function getRangeEnd(range) {
-    return (range.offset !== 1) ? range.length + range.offset :  range.length;
-}
-
-export function getStyleRanges(block, style) {
+// helper function which converts style range info from word level
+// back to the character level
+export function convertRangeFromWdToChrLevel(block, style) {
 
     const arrayOfWords = block.getText().split(" ");
     let startWord = arrayOfWords[style.start];
@@ -154,120 +131,46 @@ export function getStyleRanges(block, style) {
         }
     }
 
-    let startOffset = arrayOfWords.splice(0, style.start)
-        .join(" ").length + 1;
+    // maybe start is the first function
+    let startOffset;
+    if(style.start === 0) {
+        startOffset = 0;
+    } else {
+        startOffset = arrayOfWords.splice(0, style.start)
+            .join(" ").length + 1;
+    }
 
     let endOffset = startOffset + startWord.length;
 
     return {startOffset, endOffset};
 }
 
-export function updateContentState(
-    contentState, block, text, inlineStyles = false
-) {
-    let newContentState = contentState;
-    let blockSelection = createBlockSelection(block);
-    // getting the block text and modifying it
-    newContentState = Modifier.replaceText(
-        newContentState, blockSelection, text);
-
-    if(inlineStyles !== false) {
-        inlineStyles.forEach((style) => {
-
-            // creating block selection for the styled text segment
-            const styleRanges = getStyleRanges(block, style);
-
-            let blockInlineStyleSelection = createBlockSelection(
-                block, styleRanges.startOffset, styleRanges.endOffset
-            );
-
-            // apply the style
-            newContentState = Modifier.applyInlineStyle(
-                newContentState, blockInlineStyleSelection, style.style);
-        });
-    }
-    return newContentState;
-}
-
-/* Get style info at word level */
-export function processBlocksText (
-    contentState, processFunction, selection = false
-) {
-    // if it is selection then we process it easily
-    // TODO (sehrob): persist styles here too
+// helper function to get the text content of the contentBlock object
+export function getBlockText(selection = false, block) {
     if(selection) {
-        const block = contentState.getBlockForKey(selection.getAnchorKey());
-        const resultText = processFunction(getBlockText(selection, block));
-        // using `Modifier` gonna replace selected text with
-        // the modified one
-        return Modifier.replaceText(
-            contentState, selection, resultText
-        );
+        return block.getText().slice(
+            selection.getStartOffset(),
+            selection.getEndOffset())
     }
-
-    // else it is a lot more complicated!
-    // using raw blocks because for some reason only they have
-    // usefull inlineStyleRanges attribute
-    const rawBlocks = getRawBlocksArray(contentState);
-    let newContentState = contentState;
-    let blockInlineStylesArray = false;
-
-    rawBlocks.map((rawBlock) => {
-        // we can't use raw blocks as blocks in this context
-        // because they are different data types
-        const block = getNotRawBlock(newContentState, rawBlock.key);
-        const isProccessable = blockIsProccessible(block);
-        const hasInlineStyles = blockHasInlineStyles(rawBlock);
-        // if it is not proccessable then no need to proceed
-        if (!isProccessable) return;
-
-        if (hasInlineStyles) {
-            blockInlineStylesArray = rawBlock.inlineStyleRanges.map(
-                range => getStyledSegment(range, block.getText())
-            );
-        }
-
-        const blocksNewText = processFunction(block.getText());
-
-        newContentState = updateContentState(
-            newContentState,
-            block,
-            blocksNewText,
-            blockInlineStylesArray
-        );
-
-    });
-
-    return newContentState;
+    return block.getText();
 }
 
+// helper function for creating SelectionState for an object
+// if start and end offsets given then creates for the part of
+// contentBlock text else creates selection for entire block
+export function createBlockSelection(
+    block,
+    startOffset = false,
+    endOffset = false
+) {
+    let blockSelection = SelectionState.createEmpty(block.getKey());
+    let selectionObject = {};
+    if (startOffset) selectionObject.anchorOffset = startOffset;
+    selectionObject.focusOffset = (endOffset) ? endOffset : block.getLength();
+    return blockSelection.merge(selectionObject);
+}
 
-export function transliterate (editorState) {
-
-    const selection = editorState.getSelection();
-
-    // if selection is being transliterated
-    if(!selection.isCollapsed()) {
-        // we need to extract selected text first
-        const newContentState = processBlocksText(
-            editorState.getCurrentContent(),
-            transliterateText,
-            selection
-        )
-        // generating new editorState and returning it
-        const newState = EditorState.push(editorState, newContentState);
-        return newState;
-
-    }
-
-    // elif entire editor content is being transliterated
-    // we'll be modifying this `newContentState`
-    const newContentState = processBlocksText(
-        editorState.getCurrentContent(),
-        transliterateText
-    );
-
-    // const newContentState = ContentState.createFromBlockArray(newBlocks);
-    const newState = EditorState.push(editorState, newContentState);
-	return newState;
+// gets contentBlock and checks whether it's text is proccessable
+export function blockIsProccessible(block) {
+    return !(block.getType() === 'atomic' || block.getText().trim() === "");
 }

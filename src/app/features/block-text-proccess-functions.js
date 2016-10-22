@@ -1,5 +1,5 @@
 
 
-export function transliterate() {
-
+export function transliterate(text) {
+    return text.toUpperCase();
 }
