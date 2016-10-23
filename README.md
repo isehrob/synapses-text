@@ -1,3 +1,3 @@
 # Hello! This is SynapsesTextEditor
 
-You can try it
+It is not ready yet :(
