@@ -1,6 +1,6 @@
 
 // testing getPosition function
-// This things actually have to be done some other way
+// These things actually have to be done some other way
 // but this is what I've got so far!
 
 import {
