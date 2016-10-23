@@ -1,3 +1,4 @@
 # Hello! This is SynapsesTextEditor
 
-It is not ready yet :(
+Demo at: https://isehrob.github.io/synapses-text
+NOTE: It is not ready yet :(
