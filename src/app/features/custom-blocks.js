@@ -4,6 +4,7 @@
 import React from 'react';
 import Draft from 'draft-js';
 import { Map } from 'immutable';
+import { Media } from './entities';
 
 
 export const CustomCodeBlock = (props) => {

@@ -92,7 +92,7 @@ if(TARGET === 'start'|| !TARGET) {
 
 			new HtmlwebpackPlugin({
 				title: 'Not translator',
-				template: './index.html',
+				template: './index-dev.html',
 			  	appMountId: 'app'
 			})
 		]

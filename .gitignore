@@ -2,3 +2,4 @@ node_modules
 public/vendorjs
 public/textfont
 npm-debug*.*
+index-dev.html
