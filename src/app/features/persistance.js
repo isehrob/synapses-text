@@ -8,7 +8,7 @@ import * as Putils from './persistance-utils';
 
 
 // accepts contentState and returns the special
-// inlineStyles object for further proccessing
+// inlineStyles array for further reapplying
 export function persistStyles(rawBlock) {
     return rawBlock.inlineStyleRanges.map(
         range => Putils.convertRangeFromChrToWdLevel(range, rawBlock.text)
@@ -16,13 +16,13 @@ export function persistStyles(rawBlock) {
 }
 
 // accepts contentState and returns the special
-// entities object for further proccessing
+// entities array for further reapplying
 export function persistEntities(rawBlock){
     // TODO (sehrob): to be implemented
 }
 
 // gets contentState and special persistedStyles object and
-// apply it to the contentState and returns updated contentState
+// applies it to the contentState and returns updated contentState
 export function reApplyPersistedStyles(contentState, block, persistedStyles) {
     persistedStyles.forEach((style) => {
 
@@ -41,11 +41,12 @@ export function reApplyPersistedStyles(contentState, block, persistedStyles) {
 }
 
 // gets contentState and special persistedEntities object and
-// apply it to the contentState and returns updated contentState
+// applies it to the contentState and returns updated contentState
 export function reApplyPersistedEntities(contentState, persistedEntities) {
     // TODO (sehrob): to be implemented
 }
 
+// updates block text with the proccessed one
 export function replaceBlockText(
     contentState, proccessFunction, block
 ) {
@@ -58,7 +59,7 @@ export function replaceBlockText(
 }
 
 
-// a clouser function for contentState injection
+// a clouser function for proccessFunction injection
 export function generateContentBlockProccessor(proccessFunction){
 
     // gets contentState and contentBlock immutable record
@@ -99,7 +100,7 @@ export function proccessSelected(contentState, processFunction, selection) {
     const resultText = processFunction(
         Putils.getBlockText(selection, block)
     );
-    // using `Modifier` gonna replace selected text with
+    // using `Modifier`, gonna replace selected text with
     // the modified one
     return Modifier.replaceText(
         contentState, selection, resultText
@@ -107,15 +108,16 @@ export function proccessSelected(contentState, processFunction, selection) {
 }
 
 export function proccessWholeContent(contentState, proccessFunction) {
-    // they have inlineStyleRanges list which is usefull to find
-    // out the styled segments of text for persistance. And this is the only reason
-    // because don't want to calculate it myself from characterMetaData
+    // rawContentState blocks have inlineStyleRanges list which is usefull
+    // to find out the styled segments of text for persistance. And this
+    // is the only reason I'm using them because don't want to calculate it
+    // myself from characterMetaData
     const rawBlocks = convertToRaw(contentState).blocks;
     const proccessContentBlock = generateContentBlockProccessor(
         proccessFunction
     );
     return rawBlocks.reduce((reducedContentState, rawBlock) => {
-        // result of the function will be reduced to contentState
+        // result of the function will be reduced to reducedContentState
         return proccessContentBlock(reducedContentState, rawBlock);
     }, contentState);
 }

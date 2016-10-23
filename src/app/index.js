@@ -123,6 +123,8 @@ class SynapsesTextEditor extends React.Component {
           setTimeout(this.updateSelection, 0);
         }
 
+        this.handleKeyCommand = (command) => this._handleKeyCommand(command);
+
         this.updateStateFromToolbar = (
           newState, callback
         ) => this.setState(newState, callback);

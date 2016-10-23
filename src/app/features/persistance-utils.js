@@ -5,9 +5,8 @@ import {
 } from 'draft-js';
 
 
-// TODO (sehrob): find out when to return which one
 
-// given contentBlock's text content and sytle offset it tries
+// given contentBlock's text content and style offset it tries
 // to figure out boundaries of the word(s) that's being styled
 export function getWordBoundaryFromChrOffset(offset, blockText, start = false) {
 
@@ -87,8 +86,10 @@ export function convertRangeFromChrToWdLevel(range, blockText) {
     const startBoundary = getWordBoundaryFromChrOffset(
         range.offset, blockText, true);
     const endBoundary = getWordBoundaryFromChrOffset(rangeEnd, blockText);
-    // NOTE! what if startBoundary is also 0? then length of preText would be 1
-    // is this ok???
+
+    // sometimes if there is a word repeated in the text then
+    // indexOf returns the first ones index but styled one obiously
+    // may not be the first one so I'm doing this trick here but
     const preText = extractPreText(startBoundary, blockText);
     let segment = extractStyledSegment(blockText, startBoundary, endBoundary);
 
@@ -100,13 +101,6 @@ export function convertRangeFromChrToWdLevel(range, blockText) {
     // from which to which word gets styled or
     // decorated
     segment = segment.split(" ");
-
-    // sometimes if there is a word repeated in the text then
-    // indexOf returns the first ones index but styled one obiously
-    // may not be the first one so I'm doing this trick here but
-    // this is a temporary solution to the problem
-    // NOTE! BUG BUG BUG is here!
-    // let start = blockText.split(" ").indexOf(segment[0]);
 
     // special object that represents style info at word level
     // used at reapplying the style back to the text
@@ -129,13 +123,13 @@ export function convertRangeFromWdToChrLevel(block, style) {
     // here we will compute the range to be styled
     if(style.length > 1) {
         // substracting 1 from length because length of the
-        // first word already included int the segment
+        // first word already included into the segment
         for(let p = style.length - 1; p > 0; --p) {
             startWord += " " + arrayOfWords[p + style.start]
         }
     }
 
-    // maybe start is the first function
+    // maybe start is the first character
     let startOffset;
     if(style.start === 0) {
         startOffset = 0;
@@ -159,7 +153,7 @@ export function getBlockText(selection = false, block) {
     return block.getText();
 }
 
-// helper function for creating SelectionState for an object
+// helper function for creating SelectionState for a contentBlock
 // if start and end offsets given then creates for the part of
 // contentBlock text else creates selection for entire block
 export function createBlockSelection(
@@ -174,7 +168,7 @@ export function createBlockSelection(
     return blockSelection.merge(selectionObject);
 }
 
-// gets contentBlock and checks whether it's text is proccessable
+// gets contentBlock and checks whether it's content is proccessable
 export function blockIsProccessible(block) {
     return !(block.getType() === 'atomic' || block.getText().trim() === "");
 }
