@@ -1,4 +1,3 @@
-// taken from: https://github.com/facebook/draft-js/blob/master/examples/rich/rich.html
 
 import React from 'react';
 import ReactDOM from 'react-dom';
