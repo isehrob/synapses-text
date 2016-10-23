@@ -59,12 +59,12 @@ export function replaceBlockText(
 
 
 // a clouser function for contentState injection
-export function generateContentBlockProccessor(contentState){
+export function generateContentBlockProccessor(proccessFunction){
 
     // gets contentState and contentBlock immutable record
     // and modifies contentBlocks text, updates contentState
     // and returns it
-    return (rawBlock, proccessFunction) => {
+    return (contentState, rawBlock) => {
         // we can't use raw blocks as blocks in this context
         // because they are different data types
         const block = contentState.getBlockForKey(rawBlock.key);
@@ -106,6 +106,25 @@ export function proccessSelected(contentState, processFunction, selection) {
     );
 }
 
+export function proccessWholeContent(contentState, proccessFunction) {
+    // they have inlineStyleRanges list which is usefull to find
+    // out the styled segments of text for persistance. And this is the only reason
+    // because don't want to calculate it myself from characterMetaData
+    const rawBlocks = convertToRaw(contentState).blocks;
+    const proccessContentBlock = generateContentBlockProccessor(
+        proccessFunction
+    );
+    return rawBlocks.reduce((reducedContentState, rawBlock) => {
+        // result of the function will be reduced to contentState
+        return proccessContentBlock(reducedContentState, rawBlock);
+    }, contentState);
+}
+
+function newEditorState(editorState, contentState) {
+    const newState = EditorState.push(editorState, contentState);
+    return EditorState.moveSelectionToEnd(newState);
+}
+
 // main function which proccess block text with rich formatting persistance
 export default (editorState, proccessFunction) => {
     const selection = editorState.getSelection();
@@ -121,20 +140,14 @@ export default (editorState, proccessFunction) => {
         );
 
     } else {
-        // they have inlineStyleRanges list which is usefull to find
-        // out the styled segments of text for persistance. And this is the only reason
-        // because don't want to calculate it myself from characterMetaData
-        const rawBlocks = convertToRaw(contentState).blocks;
-        const proccessContentBlock = generateContentBlockProccessor(contentState);
-        newContentState = rawBlocks.reduce((reducedContentState, rawBlock) => {
-            // elif entire editor content is being transliterated
-            // we'll be modifying this `newContentState`
-            return proccessContentBlock(rawBlock, proccessFunction);
-        });
+        newContentState = proccessWholeContent(
+            contentState,
+            proccessFunction
+        )
     }
 
 
     // const newContentState = ContentState.createFromBlockArray(newBlocks);
-    const newState = EditorState.push(editorState, newContentState);
-	return newState;
+
+	return newEditorState(editorState, newContentState);
 }

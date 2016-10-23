@@ -5,16 +5,12 @@ import {
 } from 'draft-js';
 
 
-// NOTE! in draft ranges start from 1 not 0!
 // TODO (sehrob): find out when to return which one
 
 // given contentBlock's text content and sytle offset it tries
 // to figure out boundaries of the word(s) that's being styled
 export function getWordBoundaryFromChrOffset(offset, blockText, start = false) {
 
-    // NOTE! in draft ranges start from 1 not 0!
-    // that's why I am doing this: offset - 1
-    offset -= 1;
     // if we at the start of the text just return offset
     if (offset === 0) return offset;
 
@@ -67,7 +63,18 @@ export function getWordBoundaryFromChrOffset(offset, blockText, start = false) {
 
 // helper function for calculating end offset of the styled range
 export function getRangeEnd(range) {
-    return (range.offset !== 1) ? range.length + range.offset :  range.length;
+    return (range.length + range.offset) - 1;
+}
+
+// helper function which extracts the part of the text untill
+// styled segment
+export function extractPreText(startBoundary, text) {
+    return (startBoundary > 0) ?
+        text.substring(0, startBoundary) : false;
+}
+
+export function extractStyledSegment(text, start, end) {
+    return text.substring(start, end);
 }
 
 // gets range object and text content of the contentBlock
@@ -77,10 +84,13 @@ export function getRangeEnd(range) {
 export function convertRangeFromChrToWdLevel(range, blockText) {
 
     const rangeEnd = getRangeEnd(range);
-    var segment = blockText.substring(
-        getWordBoundaryFromChrOffset(range.offset, blockText, true),
-        getWordBoundaryFromChrOffset(rangeEnd, blockText)
-    );
+    const startBoundary = getWordBoundaryFromChrOffset(
+        range.offset, blockText, true);
+    const endBoundary = getWordBoundaryFromChrOffset(rangeEnd, blockText);
+    // NOTE! what if startBoundary is also 0? then length of preText would be 1
+    // is this ok???
+    const preText = extractPreText(startBoundary, blockText);
+    let segment = extractStyledSegment(blockText, startBoundary, endBoundary);
 
     // don't know how but segment my have spaces
     // at the start and the end, so clearing it
@@ -92,23 +102,17 @@ export function convertRangeFromChrToWdLevel(range, blockText) {
     segment = segment.split(" ");
 
     // sometimes if there is a word repeated in the text then
-    // indexOf returns the first ones index but style one obiously
+    // indexOf returns the first ones index but styled one obiously
     // may not be the first one so I'm doing this trick here but
     // this is a temporary solution to the problem
-    let start = blockText.split(" ").indexOf(segment[0]);
-    // let stop = false;
-    // while(!stop || start > blockText.length) {
-    //     if ((range.offset - start) > segment[0].length) {
-    //         start = blockText.split(" ").slice(start).indexOf(segment[0]);
-    //     }else{
-    //         stop = true;
-    //     }
-    // }
+    // NOTE! BUG BUG BUG is here!
+    // let start = blockText.split(" ").indexOf(segment[0]);
 
     // special object that represents style info at word level
     // used at reapplying the style back to the text
+    // we need extract 1 from preText's length because we need array indexes
     return {
-        start: start,
+        start: (preText) ? preText.split(" ").length - 1 : 0,
         length: segment.length,
         style: range.style
     };

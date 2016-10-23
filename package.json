@@ -11,6 +11,7 @@
   "author": "Sehrob Ibrohimov",
   "license": "ISC",
   "jest": {
+    "bail": true,
     "rootDir": ".",
     "scriptPreprocessor": "./node_modules/babel-jest",
     "testRegex": "(/__tests__/.*[^_]|\\.(test|spec))\\.(js|jsx)$"

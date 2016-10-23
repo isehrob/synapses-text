@@ -11,22 +11,42 @@ import {
     SelectionState
 } from 'draft-js';
 
-import {multilinedCs, oneLinedCs} from '../../mocks/contentState';
+import {
+    multilinedCs,
+    oneLinedCs,
+    oneLinedCs1
+} from '../../mocks/contentState';
 
 const featureFunctions = require('../../app/features/persistance-utils');
 const oneLinetext = 'Нет подключения к Интернету';
 
 // these are `draft` inline style ranges objects
-// offsets start from 1 not 0
 const oneWordRanges = [
     {length:12, offset:4,style:"UNDERLINE"},
     {length:9, offset:18,style:"ITALIC"},
 ];
 const twoWordRanges = [
-    {length:16, offset:1,style:"UNDERLINE"},
-    {length:11, offset:17,style:"ITALIC"},
+    {length:16, offset:0,style:"UNDERLINE"},
+    {length:11, offset:16,style:"ITALIC"},
 ];
 
+describe("getRangeEnd function", () => {
+    it("correctly calculates the end of the segment from the length \
+        property of the range object", () => {
+            expect(
+                featureFunctions.getRangeEnd(oneWordRanges[0])
+            ).toBe(15);
+        });
+
+    it("finds end offset correctly when there are more than one word \
+        in styled segment", () => {
+            const range = twoWordRanges[0];
+            const resultOffset = 15;
+            expect(
+                featureFunctions.getRangeEnd(range)
+            ).toBe(resultOffset);
+        });
+});
 
 // testing one line text with multiple combinations of styling
 // one word styling
@@ -102,6 +122,45 @@ describe('editors getWordBoundaryFromChrOffset feature function', () => {
         ).toBe(resultOffset);
     });
 
+    it("return start offset correctly when it lands on space", () => {
+        expect(
+            featureFunctions.getWordBoundaryFromChrOffset(3, oneLinetext, true)
+        ).toBe(4);
+    });
+
+});
+
+describe("extractPreText function", () => {
+    it("extracts part of the text prior to styled segment", () => {
+        const contentState = oneLinedCs1();
+        const text = contentState.getBlocksAsArray()[0].getText();
+        const startBoundary = 109;
+        expect(
+            featureFunctions.extractPreText(startBoundary, text).length
+        ).toBe(109);
+    });
+
+    it("handles cases when startBoundary is 0", () => {
+        const contentState = oneLinedCs1();
+        const text = contentState.getBlocksAsArray()[0].getText();
+        const startBoundary = 0;
+        expect(
+            featureFunctions.extractPreText(startBoundary, text)
+        ).toBe(false);
+    });
+});
+
+describe("extractStyledSegment function", () => {
+    it("extracts styled segment from the block text", () => {
+        const contentState = oneLinedCs1();
+        const block = contentState.getBlocksAsArray()[0];
+        const [ start, end ] = [109, 118];
+        const result = featureFunctions.extractStyledSegment(
+            block.getText(), start, end
+        );
+        expect(result).toEqual("parameter");
+        expect(result.split(" ").length).toBe(1);
+    });
 });
 
 // one word styling
@@ -138,8 +197,39 @@ describe("convertRangeFromChrToWdLevel function", () => {
         ).toEqual(expectedObj);
     });
 
+    it("correctly handles arrays indexOf method when theres a word comes \
+        multiple times in a text but only one of them is styled", () => {
+            const contentState = oneLinedCs1();
+            // below are initial values of inline styles
+            // in contentState's only block:
+            // {"offset":108,"length":9,"style":"ITALIC"},
+            // {"offset":127,"length":8,"style":"BOLD"}
+            const wdLevelStyleRanges = [
+                {start: 21, length: 1, style: "ITALIC"},
+                {start: 24, length: 1, style: "BOLD"}
+            ];
+            const rawBlock = convertToRaw(contentState).blocks[0];
+            const firstRange = rawBlock.inlineStyleRanges[0];
+            const secondRange = rawBlock.inlineStyleRanges[1];
+            expect(firstRange.offset).toBe(109);
+            expect(secondRange.offset).toBe(127);
+            expect(rawBlock.text.length).toBe(204);
+            expect(rawBlock.text.split(" ")[21]).toEqual("parameter");
+            expect(
+                featureFunctions.convertRangeFromChrToWdLevel(
+                    firstRange, rawBlock.text
+                )
+            ).toEqual(wdLevelStyleRanges[0]);
+            expect(
+                featureFunctions.convertRangeFromChrToWdLevel(
+                    secondRange, rawBlock.text
+                )
+            ).toEqual(wdLevelStyleRanges[1]);
+        });
+
 });
 
+// NOTE: here our this BUG (gy) function comes!
 describe("editor's convertRangeFromWdToChrLevel feature function", () => {
 
     const contentState = multilinedCs();
@@ -191,6 +281,35 @@ describe("editor's convertRangeFromWdToChrLevel feature function", () => {
             block.getText().substring(startOffset, endOffset)
         ).toEqual('construct we saw');
         expect(result.endOffset).toEqual(endOffset);
+    });
+
+    it("returns actual offsets of styled ranges", () => {
+        const contentState = oneLinedCs1();
+        // below are initial values of inline styles
+        // in contentState's only block:
+        const expectedResult = [
+            {"startOffset":109,"endOffset":118},
+            {"startOffset":127,"endOffset":135}
+        ];
+        const wdLevelStyleRanges = [
+            {start: 21, length: 1, style: "ITALIC"},
+            {start: 24, length: 1, style: "BOLD"}
+        ];
+        const block = contentState.getBlocksAsArray()[0];
+        expect(block.getText().length).toBe(204);
+        expect(
+            featureFunctions.convertRangeFromWdToChrLevel(
+                block, wdLevelStyleRanges[0]
+            )
+        ).toEqual(expectedResult[0]);
+        expect(
+            featureFunctions.convertRangeFromWdToChrLevel(
+                block, wdLevelStyleRanges[1]
+            )
+        ).toEqual(expectedResult[1]);
+        expect(block.getText().substring(109, 118)).toEqual("parameter");
+        expect(block.getText().substring(127, 135)).toEqual("function");
+
     });
 });
 
