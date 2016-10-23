@@ -3,3 +3,4 @@ build
 public/vendorjs
 index.html
 public/textfont
+npm-debug*.*

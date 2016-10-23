@@ -217,7 +217,7 @@ class SynapsesTextEditor extends React.Component {
                     /> : null */
                 }
 
-                <AffixWrapper className="RichEditor-panel" offset={50} >
+                { /* <AffixWrapper className="RichEditor-panel" offset={50} > */ }
 
                     <Toolbar
                         parentState={this.state}
@@ -228,7 +228,7 @@ class SynapsesTextEditor extends React.Component {
                         transliterate={this.transliterate}
                     />
 
-                </AffixWrapper>
+                {/*</AffixWrapper>*/}
 
                 <div className={className} onClick={this.focus} id="editor">
                     <Editor

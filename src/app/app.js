@@ -9,10 +9,8 @@ import SynapsesTextEditor from './index.js';
 const App = (props) => {
 	return (
 		<div className="row">
-			<div className="col-md-10 col-main">
+			<div className="col-main">
 				<SynapsesTextEditor />
-			</div>
-			<div className="col-md-2 col-right">
 			</div>
 			<div className="clearfix"></div>
 		</div>
