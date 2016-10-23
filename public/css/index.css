@@ -15,6 +15,9 @@
 body{
 	font-family:  'Questrial', sans-serif;
 }
+img, video{
+	width: 100%;
+}
 div.container{
 	width: 980px
 }

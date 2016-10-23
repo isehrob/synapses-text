@@ -13,6 +13,7 @@
   cursor: text;
   font-size: 16px;
   margin-top: 10px;
+  position: relative;
 }
 
 .RichEditor-editor .public-DraftEditorPlaceholder-root,
@@ -92,7 +93,7 @@ a.RichEditor-link{
   border: none;
   background: none;
   padding: 0;
-  margin: 0;   
+  margin: 0;
 }
 
 .inline-toolbar {
@@ -131,7 +132,7 @@ a.RichEditor-link{
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;
- 
+
     position: absolute;
     z-index: 1;
 }*/
