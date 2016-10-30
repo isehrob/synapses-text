@@ -16,7 +16,7 @@ import {
     proccessedOneLinedContentState1,
     proccessedMultilinedContentState
 } from '../../mocks/contentState';
-import withPersistance, * as pfunctions from '../../app/features/persistance';
+import withPersistance, * as pfunctions from '../../features/persistance';
 
 
 describe("persistStyles function", () => {

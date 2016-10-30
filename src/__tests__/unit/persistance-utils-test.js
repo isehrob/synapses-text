@@ -17,7 +17,7 @@ import {
     oneLinedCs1
 } from '../../mocks/contentState';
 
-const featureFunctions = require('../../app/features/persistance-utils');
+const featureFunctions = require('../../features/persistance-utils');
 const oneLinetext = 'Нет подключения к Интернету';
 
 // these are `draft` inline style ranges objects
