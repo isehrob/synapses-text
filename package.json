@@ -13,7 +13,9 @@
   "jest": {
     "bail": true,
     "rootDir": ".",
-    "scriptPreprocessor": "./node_modules/babel-jest"
+    "scriptPreprocessor": "./node_modules/babel-jest",
+    "collectCoverage": true,
+    "coverageDirectory": "./codecov"
   },
   "babel": {
     "presets": ["es2015", "react"]
