@@ -4,7 +4,7 @@
   "description": "Welcome to synapses text project!",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest && codecov",
     "build": "webpack",
     "start": "webpack-dev-server"
   },
