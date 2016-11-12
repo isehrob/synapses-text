@@ -1,6 +1,7 @@
-
+import transliteration, { whichChar } from '../transliteration';
 
 export function transliterate(text) {
     // TODO (sehrob): to be implemented
-    return text.toUpperCase();
+    const currentChar = whichChar(text);
+    return transliteration(currentChar, text);
 }
