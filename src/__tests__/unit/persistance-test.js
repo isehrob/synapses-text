@@ -93,7 +93,7 @@ describe("reApplyPersistedStyles function", () => {
         expect(
             fn(contentState, block, persisted)
         ).toEqual(newContentState);
-    })
+    });
 });
 
 describe("reApplyPersistedEntities function", () => {
@@ -121,10 +121,6 @@ describe("generateContentBlockProccessor function", () => {
             // checking if it is a contentState object returned
             expect(result.getBlockForKey).toBeDefined();
         });
-});
-
-describe("generateContentBlockProccessor generated partially applied function",
-    () => {
 
     it("proccesses contentBlock with rich styling persistance \
         and contentState is injected in him", () => {
@@ -159,6 +155,18 @@ describe("proccessWholeContent function", () => {
         result to the contentState", () => {
             const contentState = oneLinedCs1();
             const proccessedContentState = proccessedOneLinedContentState1();
+            const result = pfunctions.proccessWholeContent(
+                contentState, (text) => text.toUpperCase()
+            );
+            // expect result to be contentState
+            expect(result.getBlockForKey).toBeDefined();
+            expect(result).toEqual(proccessedContentState);
+        });
+
+    it("proccesses all contentBlocks persisting rich styling and reduces \
+        result to the contentState", () => {
+            const contentState = multilinedCs();
+            const proccessedContentState = proccessedMultilinedContentState();
             const result = pfunctions.proccessWholeContent(
                 contentState, (text) => text.toUpperCase()
             );

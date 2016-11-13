@@ -6,13 +6,13 @@
   "scripts": {
     "test": "jest && codecov",
     "build": "webpack",
-    "start": "webpack-dev-server --host 0.0.0.0"
+    "start": "webpack-dev-server --host 0.0.0.0 --port 8585"
   },
   "author": "Sehrob Ibrohimov",
   "license": "ISC",
   "jest": {
     "bail": true,
-    "collectCoverage": false,
+    "collectCoverage": true,
     "coverageDirectory": "./codecov"
   },
   "devDependencies": {

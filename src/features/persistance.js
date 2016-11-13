@@ -24,20 +24,20 @@ export function persistEntities(rawBlock){
 // gets contentState and special persistedStyles object and
 // applies it to the contentState and returns updated contentState
 export function reApplyPersistedStyles(contentState, block, persistedStyles) {
-    persistedStyles.forEach((style) => {
-
+    return persistedStyles.reduce((reducedCs, style, i) => {
         // creating block selection for the styled text segment
         const styleRanges = Putils.convertRangeFromWdToChrLevel(block, style);
-
         const selection = Putils.createBlockSelection(
             block, styleRanges.startOffset, styleRanges.endOffset
         );
-
-        // apply the style
-        contentState = Modifier.applyInlineStyle(
-            contentState, selection, style.style);
-    });
-    return contentState;
+        // console.log('iteration: ', i, reducedCs);
+        // console.log(reducedCs.getPlainText());
+        // const cmdlist = reducedCs.getBlocksAsArray()[0].getCharacterList();
+        // console.log(cmdlist.toJSON());
+        // console.log(selection);
+        return Modifier.applyInlineStyle(
+            reducedCs, selection, style.style);
+    }, contentState);
 }
 
 // gets contentState and special persistedEntities object and
@@ -100,7 +100,7 @@ export function proccessSelected(contentState, processFunction, selection) {
     const resultText = processFunction(
         Putils.getBlockText(selection, block)
     );
-    // using `Modifier`, gonna replace selected text with
+    // using `Modifier` gonna replace selected text with
     // the modified one
     return Modifier.replaceText(
         contentState, selection, resultText
