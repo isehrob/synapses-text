@@ -170,5 +170,5 @@ export function createBlockSelection(
 
 // gets contentBlock and checks whether it's content is proccessable
 export function blockIsProccessible(block) {
-    return !(block.getType() === 'atomic' || block.getText().trim() === "");
+    return !(block.getText().trim() === "" || block.getType() === 'atomic');
 }
