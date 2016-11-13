@@ -46,17 +46,6 @@ var common = {
 				includes: PATHS.app,
 				// babel configuration goes below
 				// for some reason can't get it work in .babelcr
-				query: {
-		          presets: ['es2015', 'react'],
-		          plugins: [
-				    "syntax-class-properties",
-				    "syntax-decorators",
-				    "syntax-object-rest-spread",
-				    "transform-class-properties",
-				    "transform-decorators-legacy",
-				    "transform-object-rest-spread"
-				  ]
-		        }
 			}
 		]
 	}

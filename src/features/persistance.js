@@ -33,13 +33,9 @@ export function reApplyPersistedStyles(contentState, block, persistedStyles) {
             block, styleRanges.startOffset, styleRanges.endOffset
         );
 
-        console.log('in reapplying style');
-        console.log(block);
-        console.log(selection);
-
         // apply the style
-        // contentState = Modifier.applyInlineStyle(
-        //     contentState, selection, style.style);
+        contentState = Modifier.applyInlineStyle(
+            contentState, selection, style.style);
     });
     return contentState;
 }

@@ -164,7 +164,7 @@ describe("proccessWholeContent function", () => {
             );
             // expect result to be contentState
             expect(result.getBlockForKey).toBeDefined();
-            // expect(result).toEqual(proccessedContentState);
+            expect(result).toEqual(proccessedContentState);
         });
 })
 
@@ -176,110 +176,3 @@ describe("main persistance function", () => {
 
     });
 });
-
-
-/* describe("editor's updateContentState feature function", () => {
-
-    const contentState = multilinedCs();
-
-    it('updates blocks text even without inline styles \
-        returns new contentState', () => {
-        const block = contentState.getBlockForKey("3hido");
-        const newText = block.getText().toUpperCase();
-        const selection = featureFunctions.createBlockSelection(block)
-        const newContentState = Modifier.replaceText(
-            contentState, selection, newText
-        );
-        const result = featureFunctions.updateContentState(
-            contentState, block, newText
-        );
-        expect(result).toEqual(newContentState);
-
-    });
-
-    it('updates blocks text and reapplies its inlineStyles \
-        returns new contentState object', () => {
-        const block = contentState.getBlockForKey("3hido");
-        const newText = block.getText().toUpperCase();
-        const selection = featureFunctions.createBlockSelection(block);
-        let newContentState = Modifier.replaceText(
-            contentState, selection, newText
-        );
-        const styleSelection = featureFunctions.createBlockSelection(
-            block, 8, 24
-        )
-        newContentState = Modifier.applyInlineStyle(
-            newContentState, styleSelection, 'CODE'
-        )
-        const otherStyleSelection = featureFunctions.createBlockSelection(
-            block, 4, 7
-        )
-        newContentState = Modifier.applyInlineStyle(
-            newContentState, otherStyleSelection, 'CODE'
-        )
-        const result = featureFunctions.updateContentState(
-            contentState, block, newText,
-            [
-                {"start": 2, "length": 3, "style": 'CODE'},
-                {"start": 1, "length": 1, "style": 'CODE'}
-            ]
-        );
-        expect(result).toEqual(newContentState);
-    });
-});
-
-describe("editor's processBlocksText feature function", () => {
-
-    const contentState = multilinedCs();
-
-    it("proccesses selected segment of the text within the block", () => {
-        const block = contentState.getBlockForKey("3hido");
-        const anchor = 8;
-        const focus = 24;
-        let selection = SelectionState.createEmpty(block.getKey())
-        selection = selection.merge({anchorOffset: anchor, focusOffset: focus});
-        const expectedCs = Modifier.replaceText(
-            contentState, selection,
-            block.getText().slice(anchor, focus).toUpperCase()
-        );
-        const result = featureFunctions.processBlocksText(
-            contentState, featureFunctions.transliterateText, selection
-        );
-        expect(result).toEqual(expectedCs);
-    });
-
-    it("proccesses all blocks text data and reapply style info", () => {
-        const styles = [
-            {"key":"3hido", range: {"offset":4,"length":3,"style":"CODE"}},
-            {"key":"2d85q", range: {"offset":87,"length":5,"style":"CODE"}}
-        ];
-
-        let expectedCs = contentState;
-        const blocks = contentState.blockMap.toArray();
-        // first modify text
-        blocks.forEach((block) => {
-            if(block.getText().trim() === "") return;
-            const selection = featureFunctions.createBlockSelection(block);
-            expectedCs = Modifier.replaceText(
-                expectedCs, selection, block.getText().toUpperCase()
-            );
-        });
-        // now apply styles
-        styles.forEach((style) => {
-            const selection = featureFunctions.createBlockSelection(
-                expectedCs.getBlockForKey(style.key),
-                style.range.offset, (style.range.length + style.range.offset)
-            );
-            expectedCs = Modifier.applyInlineStyle(
-                expectedCs, selection, style.range.style
-            );
-        });
-
-        const result = featureFunctions.processBlocksText(
-            contentState, featureFunctions.transliterateText
-        );
-        expect(result).toEqual(expectedCs);
-    });
-});
-
-*/
