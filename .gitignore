@@ -4,4 +4,5 @@ public/textfont
 npm-debug*.*
 index-dev.html
 codecov
-src/transliteration
+src/tranliteration
+.remote-sync.json
