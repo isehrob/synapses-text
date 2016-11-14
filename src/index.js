@@ -240,16 +240,21 @@ class SynapsesTextEditor extends React.Component {
                         editorState={editorState}
                         handleKeyCommand={this.handleKeyCommand}
                         onChange={this.onChange}
-                        placeholder="Qani boshladik..."
+                        placeholder="Matn..."
                         ref="editor"
                         spellCheck={true}
                     />
                 </div>
-                <input
-                    onClick={this.logState}
-                    type="button"
-                    value="Log State"
-                />
+                {
+                    /*
+                    <input
+                        onClick={this.logState}
+                        type="button"
+                        value="Log State"
+                    />
+                    */
+                }
+
                 <input
                     onClick={this.togglePreview}
                     type="button"
@@ -265,14 +270,18 @@ class SynapsesTextEditor extends React.Component {
                     type="button"
                     value="Html"
                 />
-                <input
-                    onClick={() => {
-                        window.blockmap = editorState
-                          .getCurrentContent().blockMap;
-                    }}
-                    type="button"
-                    value="current content"
-                />
+                {
+                    /*
+                    <input
+                        onClick={() => {
+                            window.blockmap = editorState
+                              .getCurrentContent().blockMap;
+                        }}
+                        type="button"
+                        value="current content"
+                    />
+                    */
+                }
                 <br />
                 <hr />
                 <div>
