@@ -242,7 +242,7 @@ class SynapsesTextEditor extends React.Component {
                         onChange={this.onChange}
                         placeholder="Matn..."
                         ref="editor"
-                        spellCheck={true}
+                        spellCheck={false}
                     />
                 </div>
                 {
