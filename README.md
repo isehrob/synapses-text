@@ -6,4 +6,4 @@
 
 Demo at: https://isehrob.github.io/synapses-text
 
-NOTE: It is not ready yet :(
+**NOTE:** This is an experimental project and not ready for production yet.
